@@ -4,26 +4,26 @@ using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloAutenticacao;
 using Gestao_de_Estacionamento.Core.Dominio.Compartilhado;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Gestao_de_Estacionamento.Infraestrutura.Orm.Compartilhado;
 
 public class AppDbContext(DbContextOptions options, ITenantProvider? tenantProvider = null) : IdentityDbContext<Usuario, Cargo, Guid>(options), IUnitOfWork
 {
-    // Area para os DbSets, exemplo: public DbSet<Exemplo> Exemplos { get; set; }
+    public DbSet<Veiculo> Veiculos { get; set; }
+
+    private readonly ITenantProvider? tenantProvider;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (tenantProvider is not null)
         {
-            /*
-            Area para definir a seleção das queries via UsuarioId, exemplo: 
-
-            modelBuilder.Entity<Contato>()
+            modelBuilder.Entity<Veiculo>()
                 .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
-            */
         }
 
-        Assembly assembly = typeof(AppDbContext).Assembly;
+        var assembly = typeof(AppDbContext).Assembly;
 
         modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
