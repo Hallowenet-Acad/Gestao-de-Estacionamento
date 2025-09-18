@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using FluentResults;
-using Gestao_de_Estacionamento.Aplicacao.ModuloVeiculo;
-using Gestao_de_Estacionamento_web_api.Extensions;
+using Gestao_de_Estacionamento_web_api.Models.ModuloVeiculo;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Gestao_de_Estacionamento_web_api.Models.ModuloVeiculo.VeiculoViewModels;
 
 namespace Gestao_de_Estacionamento_web_api.Controllers;
 
@@ -16,5 +13,8 @@ namespace Gestao_de_Estacionamento_web_api.Controllers;
 public class VeiculoController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<CadastrarVeiculoViewModel>>
+    public async Task<ActionResult<CadastrarVeiculoResponse>> Cadastrar(CadastrarVeiculoRequest request)
+    {
+        var command = mapper.Map(CadastrarVeiculoCommand)
+    }
 }
