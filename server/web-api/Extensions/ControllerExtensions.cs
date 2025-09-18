@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Gestao_de_Estacionamento_web_api.Controllers;
 using Gestao_de_Estacionamento_web_api.Models.Notificacao;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -33,22 +34,21 @@ public static class ControllerExtensions
 
         return controller.RedirectToAction("Index");
     }
-    //Descomentar quando implementar o HomeController
 
-    //public static IActionResult RedirecionarParaNotificacaoHome(this Controller controller, Result resultado)
-    //{
-    //    foreach (var error in resultado.Errors)
-    //    {
-    //        var notificacaoJson = NotificacaoViewModel.GerarNotificacaoSerializada(
-    //            error.Message,
-    //            error.Reasons[0].Message
-    //        );
+    public static IActionResult RedirecionarParaNotificacaoHome(this Controller controller, Result resultado)
+    {
+        foreach (var error in resultado.Errors)
+        {
+            var notificacaoJson = NotificacaoViewModel.GerarNotificacaoSerializada(
+                error.Message,
+                error.Reasons[0].Message
+            );
 
-    //        controller.TempData.TryAdd(nameof(NotificacaoViewModel), notificacaoJson);
-    //    }
+            controller.TempData.TryAdd(nameof(NotificacaoViewModel), notificacaoJson);
+        }
 
-    //    return controller.RedirectToAction(nameof(HomeController.Index), "Home");
-    //}
+        return controller.RedirectToAction(nameof(HomeController.Index), "Home");
+    }
 
     public static IActionResult PreencherErrosModelState(this Controller controller, Result resultado, object viewModel)
     {
