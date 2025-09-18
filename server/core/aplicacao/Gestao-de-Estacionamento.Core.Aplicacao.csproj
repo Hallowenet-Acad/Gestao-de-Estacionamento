@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="ModuloVeiculo\Handlers\EditarVeiculoCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\dominio\Gestao-de-Estacionamento.Core.Dominio.csproj" />
   </ItemGroup>
 
