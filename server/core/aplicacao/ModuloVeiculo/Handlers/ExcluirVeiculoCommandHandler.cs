@@ -41,5 +41,18 @@ public class ExcluirVeiculoCommandHandler(
 
             return Result.Ok(result);
         }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackAsync();
+
+            logger.LogError(
+                ex,
+                "Ocorreu um erro durante a exclusão de {@Registro}.",
+                command
+                );
+
+            return Result.Fail(ResultadosErro.ExcecaoInternaErro(ex));  
+        }
+
     }
 }
