@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="AutoMapper\" />
-    <Folder Include="FluentValidation\" />
   </ItemGroup>
 
   <ItemGroup>
