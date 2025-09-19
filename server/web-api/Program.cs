@@ -23,7 +23,8 @@ public class Program
         builder.Services.AddIdentityProviders();
         builder.Services.AddJwtAuthentication(builder.Configuration);
 
-        builder.Services.AddControllers()
+        builder.Services
+            .AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
