@@ -8,9 +8,9 @@ public record EditarVagaCommand(
     int Numero,
     char Zona,
     bool Status
-    ) : IRequest<Result<EditarVeiculoResult>>;
+    ) : IRequest<Result<EditarVagaResult>>;
 
-public record EditarVeiculoResult(
+public record EditarVagaResult(
     int Numero,
     char Zona,
     bool Status

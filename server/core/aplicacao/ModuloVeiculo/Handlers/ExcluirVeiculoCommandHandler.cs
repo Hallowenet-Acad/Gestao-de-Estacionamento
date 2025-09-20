@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Handlers;
 
 public class ExcluirVeiculoCommandHandler(
-   IRepositorioVeiculo repositorioVeiculo,
+    IRepositorioVeiculo repositorioVeiculo,
     ITenantProvider tenantProvider,
     IUnitOfWork unitOfWork,
     IDistributedCache cache,

@@ -1,25 +1,26 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Gestao_de_Estacionamento.Core.Aplicacao.Compartilhado;
+using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVaga.Commands;
 using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Commands;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloAutenticacao;
-using Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloVaga;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Handlers;
+namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVaga.Handlers;
 
-public class SelecionarVeiculoQueryHandler (
-    IRepositorioVeiculo repositorioVeiculo,
+public class SelecionarVagaQueryHandler (
+    IRepositorioVaga repositorioVaga,
     ITenantProvider tenantProvider,
     IMapper mapper,
     IDistributedCache cache,
-    ILogger<SelecionarVeiculoQueryHandler> logger
-    ) : IRequestHandler<SelecionarVeiculosQuery, Result<SelecionarVeiculosResult>>
+    ILogger<SelecionarVagaQueryHandler> logger
+    ) : IRequestHandler<SelecionarVagasQuery, Result<SelecionarVagasResult>>
 {
-    public async Task<Result<SelecionarVeiculosResult>> Handle(SelecionarVeiculosQuery query, CancellationToken cancellationToken)
+    public async Task<Result<SelecionarVagasResult>> Handle(SelecionarVagasQuery query, CancellationToken cancellationToken)
     {
         try
         {
@@ -28,25 +29,25 @@ public class SelecionarVeiculoQueryHandler (
 
             var jsonString = await cache.GetStringAsync(cacheKey, cancellationToken);
 
-            if(!string.IsNullOrWhiteSpace(jsonString))
+            if (!string.IsNullOrWhiteSpace(jsonString))
             {
-                var registrosEmCache = JsonSerializer.Deserialize<SelecionarVeiculosResult>(jsonString);
+                var registrosEmCache = JsonSerializer.Deserialize<SelecionarVagasResult>(jsonString);
 
                 if (registrosEmCache is not null)
                     return Result.Ok(registrosEmCache);
             }
 
             var registros = query.Quantidade.HasValue ?
-                await repositorioVeiculo.SelecionarRegistrosAsync(query.Quantidade.Value) :
-                await repositorioVeiculo.SelecionarRegistrosAsync();
+                await repositorioVaga.SelecionarRegistrosAsync(query.Quantidade.Value) :
+                await repositorioVaga.SelecionarRegistrosAsync();
 
-            var result = mapper.Map<SelecionarVeiculosResult>(registros);
+            var result = mapper.Map<SelecionarVagasResult>(registros);
 
-            var jsonPayload = JsonSerializer.Serialize(result);
+            var jsonPayLoad = JsonSerializer.Serialize(result);
 
             var cacheOptions = new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60) };
 
-            await cache.SetStringAsync(cacheKey, jsonPayload, cacheOptions, cancellationToken);
+            await cache.SetStringAsync(cacheKey, jsonPayLoad, cacheOptions, cancellationToken);
 
             return Result.Ok(result);
         }
@@ -54,7 +55,7 @@ public class SelecionarVeiculoQueryHandler (
         {
             logger.LogError(
                 ex,
-                "Ocorreu um erro ao selecionar {@Registros}.",
+                "Ocorreu um erro ao Selecionar {@Registro}.",
                 query
                 );
 

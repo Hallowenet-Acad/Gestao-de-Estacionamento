@@ -4,7 +4,6 @@ using Gestao_de_Estacionamento.Core.Aplicacao.Compartilhado;
 using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Commands;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
 using MediatR;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Handlers;

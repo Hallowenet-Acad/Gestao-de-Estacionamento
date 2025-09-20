@@ -2,28 +2,28 @@
 using FluentResults;
 using FluentValidation;
 using Gestao_de_Estacionamento.Core.Aplicacao.Compartilhado;
-using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Commands;
+using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVaga.Commands;
 using Gestao_de_Estacionamento.Core.Dominio.Compartilhado;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloAutenticacao;
-using Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloVaga;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
-namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Handlers;
+namespace Gestao_de_Estacionamento.Core.Aplicacao.ModuloVaga.Handlers;
 
-public class CadastrarVeiculoCommandHandler(
-    IRepositorioVeiculo repositorioVeiculo,
+public class CadastrarVagaCommandHandler(
+    IRepositorioVaga repositorioVaga,
     ITenantProvider tenantProvider,
     IUnitOfWork unitOfWork,
     IMapper mapper,
     IDistributedCache cache,
-    IValidator<CadastrarVeiculoCommand> validator,
-    ILogger<CadastrarVeiculoCommandHandler> logger
-    ) : IRequestHandler<CadastrarVeiculoCommand, Result<CadastrarVeiculoResult>>
+    IValidator<CadastrarVagaCommand> validator,
+    ILogger<CadastrarVagaCommandHandler> logger
+    ) : IRequestHandler<CadastrarVagaCommand, Result<CadastrarVagaResult>>
 {
-    public async Task<Result<CadastrarVeiculoResult>> Handle(
-        CadastrarVeiculoCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CadastrarVagaResult>> Handle(
+        CadastrarVagaCommand command, CancellationToken cancellationToken)
     {
         var resultadoValidacao = await validator.ValidateAsync(command, cancellationToken);
 
@@ -32,32 +32,32 @@ public class CadastrarVeiculoCommandHandler(
             var erros = resultadoValidacao.Errors.Select(e => e.ErrorMessage);
 
             var erroFormatado = ResultadosErro.RequisicaoInvalidaErro(erros);
-
+            
             return Result.Fail(erroFormatado);
         }
 
-        var registros = await repositorioVeiculo.SelecionarRegistrosAsync();
+        var registros = await repositorioVaga.SelecionarRegistrosAsync();
 
-        if (registros.Any(i => i.Placa.Equals(command.Placa)))
-            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe um veículo registrado com esta placa."));
-
+        if (registros.Any(i => i.Numero.Equals(command.numero)) && registros.Any(i => i.Zona.Equals(command.zona)))
+            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe uma vaga nessa zona com esse número."));
+        
         try
         {
-            var veiculo = mapper.Map<Veiculo>(command);
+            var vaga = mapper.Map<Vaga>(command);
 
-            veiculo.UsuarioId = tenantProvider.UsuarioId.GetValueOrDefault();
+            vaga.UsuarioId = tenantProvider.UsuarioId.GetValueOrDefault();
 
-            await repositorioVeiculo.CadastrarRegistroAsync(veiculo);
+            await repositorioVaga.CadastrarRegistroAsync(vaga);
 
             await unitOfWork.CommitAsync();
 
-            var cacheKey = $"veiculos:u={tenantProvider.UsuarioId.GetValueOrDefault()}:q=all";
+            var cacheKey = $"vagas:u={tenantProvider.UsuarioId.GetValueOrDefault()}:q=all";
 
             await cache.RemoveAsync(cacheKey, cancellationToken);
 
-            var result = mapper.Map<CadastrarVeiculoResult>(veiculo);
+            var result = mapper.Map<CadastrarVagaResult>(vaga);
 
-            return Result.Ok(result);   
+            return Result.Ok(result);
         }
 
         catch (Exception ex)
