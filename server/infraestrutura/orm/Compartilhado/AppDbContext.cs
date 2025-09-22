@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloAutenticacao;
 using Gestao_de_Estacionamento.Core.Dominio.Compartilhado;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
-using Microsoft.EntityFrameworkCore.Storage;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloEstacionamento.ModuloVaga;
 
 namespace Gestao_de_Estacionamento.Infraestrutura.Orm.Compartilhado;
 
 public class AppDbContext(DbContextOptions options, ITenantProvider? tenantProvider = null) : IdentityDbContext<Usuario, Cargo, Guid>(options), IUnitOfWork
 {
     public DbSet<Veiculo> Veiculos { get; set; }
+    public DbSet<Vaga> Vagas { get; set; }
 
     private readonly ITenantProvider? tenantProvider;
 

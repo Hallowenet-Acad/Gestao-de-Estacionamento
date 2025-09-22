@@ -4,7 +4,7 @@ using Gestao_de_Estacionamento.Core.Aplicacao.Compartilhado;
 using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVaga.Commands;
 using Gestao_de_Estacionamento.Core.Aplicacao.ModuloVeiculo.Commands;
 using Gestao_de_Estacionamento.Core.Dominio.ModuloAutenticacao;
-using Gestao_de_Estacionamento.Core.Dominio.ModuloVaga;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloEstacionamento.ModuloVaga;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
