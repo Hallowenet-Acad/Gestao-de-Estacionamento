@@ -1,4 +1,5 @@
 ﻿using Gestao_de_Estacionamento.Core.Dominio.Compartilhado;
+using Gestao_de_Estacionamento.Core.Dominio.ModuloEstacionamento.ModuloVaga;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gestao_de_Estacionamento.Core.Dominio.ModuloVeiculo;
@@ -9,6 +10,7 @@ public class Veiculo : EntidadeBase<Veiculo>
     public string Modelo { get; set; }
     public string Cor { get; set; }
     public string CPFHospede { get; set; }
+    public Vaga Vaga { get; set; }
 
     [ExcludeFromCodeCoverage]
     public Veiculo() { }
